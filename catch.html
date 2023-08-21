@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Catch the Egg</title>
+  <style>
+    #basket {
+      position: absolute;
+      bottom: 0;
+      left: 45%;
+      width: 50px;
+      height: 50px;
+      background-image: url('n.jpeg');
+      background-size: contain;
+    }
+    #egg {
+      position: absolute;
+      top: -50px;
+      left: 45%;
+      width: 50px;
+      height: 50px;
+      background-image: url('Unknown.jpeg');
+      background-size: contain;
+    }
+    #score {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div id="basket"></div>
+  <div id="egg"></div>
+  <div id="score">Score: <span>0</span></div>
+  <script type="text/javascript">
+    var basket = document.getElementById("basket");
+    var egg = document.getElementById("egg");
+    var score = document.querySelector("#score span");
+    var eggX, eggY, basketX, basketY, points;
+
+    function init() {
+      eggX = egg.offsetLeft;
+      eggY = egg.offsetTop;
+      basketX = basket.offsetLeft;
+      basketY = basket.offsetTop;
+      points = 0;
+    }
+
+    function moveBasket(e) {
+      if (e.keyCode == 37) {
+        basketX -= 10;
+        if (basketX < 0) {
+          basketX = 0;
+        }
+        basket.style.left = basketX + "px";
+      } else if (e.keyCode == 39) {
+        basketX += 10;
+        if (basketX > window.innerWidth - basket.offsetWidth) {
+          basketX = window.innerWidth - basket.offsetWidth;
+        }
+        basket.style.left = basketX + "px";
+      }
+    }
+
+    function dropEgg() {
+      eggY += 5;
+      egg.style.top = eggY + "px";
+      if (eggY > window.innerHeight - egg.offsetHeight) {
+        if (Math.abs(eggX - basketX) < basket.offsetWidth / 2) {
+          points++;
+          score.textContent = points;
+        } else {
+          alert("Game Over! Your score is " + points);
+          init();
+        }
+        eggY = -egg.offsetHeight;
+        eggX = Math.random() * (window.innerWidth - egg.offsetWidth);
+        egg.style.left = eggX + "px";
+      }
+    }
+
+    init();
+    document.onkeydown = moveBasket;
+    setInterval(dropEgg, 20);
+  </script>
+</body>
+</html>
